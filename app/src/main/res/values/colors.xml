@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Background Colors -->
+    <color name="background">#FEFBF3</color>
+    <color name="element_background">#F8F0DF</color>
+    <color name="input_text_background">#FBFCFB</color>
+
+    <!-- Accent Colors -->
+    <color name="accent">#79B4B7</color>
+
+    <!-- Text Colors -->
+    <color name="dark_gray">#2E2E2E</color>
+    <color name="placeholder_text">#868686</color>
+
+    <!-- Warning Color -->
+    <color name="warning">#D70000</color>
+
+    <!-- Mood Colors -->
+    <color name="mood_angry">#E57373</color>
+    <color name="mood_sad">#90CAF9</color>
+    <color name="mood_neutral">#B0BEC5</color>
+    <color name="mood_happy">#E0D35E</color>
+    <color name="mood_excited">#A5D6A7</color>
+</resources>

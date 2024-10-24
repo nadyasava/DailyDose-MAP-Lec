@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="top"
+    android:background="@android:color/white"
+    android:paddingHorizontal="35dp">
+
+
+    <TextView
+        android:id="@+id/sign_in_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="166dp"
+        android:layout_marginBottom="5dp"
+        android:text="Hi, Welcome Back!"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textColor="@color/dark_gray"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/sign_in_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="35dp"
+        android:gravity="center"
+        android:textColor="@color/dark_gray"
+        android:text="Your Journal Awaits"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/login_email_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="Email"
+        android:textAlignment="textStart"
+        android:textColor="@color/dark_gray"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/loginEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your email"
+        android:inputType="textEmailAddress"
+        android:padding="12dp"
+        android:background="@drawable/rounded_edittext"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:id="@+id/login_password_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="Password"
+        android:textAlignment="textStart"
+        android:textColor="@color/dark_gray"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/loginPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your password"
+        android:inputType="textPassword"
+        android:padding="12dp"
+        android:background="@drawable/rounded_edittext"
+        android:layout_marginBottom="60dp" />
+
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sign In"
+        android:textColor="@color/dark_gray"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:background="@drawable/rounded_button"
+        android:textAllCaps="false"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="40dp">
+
+        <TextView
+            android:id="@+id/toRegister_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Don't have an account? "
+            android:textColor="@color/dark_gray" />
+
+        <TextView
+            android:id="@+id/toRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign Up"
+            android:textColor="@color/accent"
+            android:paddingBottom="4dp" />
+    </LinearLayout>
+
+</LinearLayout>

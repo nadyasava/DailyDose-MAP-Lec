@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "966560822785",
+    "project_id": "dailydose-lec",
+    "storage_bucket": "dailydose-lec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:966560822785:android:c17c5f747b0883bc1e3200",
+        "android_client_info": {
+          "package_name": "com.example.dailydose"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByHat_1djikmvU17nnCB6XSY3LxJA5Jrg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

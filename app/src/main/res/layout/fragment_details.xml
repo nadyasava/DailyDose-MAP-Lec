@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="35dp"
+        tools:context=".ProfileFragment"
+        android:background="@color/background">
+
+        <ImageButton
+            android:id="@+id/buttonBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_back"
+            android:background="?attr/selectableItemBackground"
+            android:layout_marginTop="5dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                android:id="@+id/storyTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="A Purr-fect Day with Milo"
+                android:textAlignment="textStart"
+                android:textSize="24sp"
+                android:textColor="@color/dark_gray"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/buttonFilter"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/rounded_searchbar"
+                android:src="@drawable/ic_menu"
+                android:scaleType="centerInside"
+                android:padding="5dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/timestampTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="14sp"
+            android:textColor="@color/dark_gray"
+            tools:text="Timestamp goes here"/>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/storyImageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="20dp"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/default_image"
+            app:shapeAppearanceOverlay="@style/CustomImageViewRoundedCorners" />
+
+        <TextView
+            android:id="@+id/storyTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textSize="16sp"
+            tools:text="Story content goes here"
+            android:textColor="@color/dark_gray"
+            android:justificationMode="inter_word" />
+    </LinearLayout>
+</layout>
