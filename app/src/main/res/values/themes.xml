@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.DailyDose" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.DailyDose" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/accent</item>
         <item name="colorPrimaryVariant">@color/element_background</item>
         <item name="colorOnPrimary">@color/dark_gray</item>
@@ -15,6 +15,11 @@
     <style name="CustomImageViewRoundedCorners" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>
+    </style>
+
+    <style name="CustomBottomNavigationView" parent="Widget.Design.BottomNavigationView">
+        <item name="itemIconTint">@drawable/bottom_nav_item_color</item> <!-- Color for icons -->
+        <item name="itemTextColor">@drawable/bottom_nav_item_color</item> <!-- Color for text -->
     </style>
 
     <style name="Theme.DailyDose" parent="Base.Theme.DailyDose" />
