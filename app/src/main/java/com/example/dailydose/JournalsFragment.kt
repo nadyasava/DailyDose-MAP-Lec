@@ -170,6 +170,24 @@ class JournalsFragment : Fragment() {
             return
         }
 
+        binding.clearFilterBtn.visibility = View.VISIBLE
+
+        binding.frustratedSelectedBtn.visibility = View.GONE
+        binding.neutralSelectedBtn.visibility = View.GONE
+        binding.sadSelectedBtn.visibility = View.GONE
+        binding.happySelectedBtn.visibility = View.GONE
+        binding.excitedSelectedBtn.visibility = View.GONE
+
+        for (mood in selectedMoods){
+            when(mood) {
+                "Frustrated" -> binding.frustratedSelectedBtn.visibility = View.VISIBLE
+                "Neutral" -> binding.neutralSelectedBtn.visibility = View.VISIBLE
+                "Sad" -> binding.sadSelectedBtn.visibility = View.VISIBLE
+                "Happy" -> binding.happySelectedBtn.visibility = View.VISIBLE
+                "Excited" -> binding.excitedSelectedBtn.visibility = View.VISIBLE
+            }
+        }
+
         // Ambil userId dari user yang sedang login
         val userId = auth.currentUser?.uid ?: return
 
@@ -189,26 +207,6 @@ class JournalsFragment : Fragment() {
                     }
                 }
 
-                if (moodTitles.isNotEmpty()){
-
-                    binding.clearFilterBtn.visibility = View.VISIBLE
-
-                    binding.frustratedSelectedBtn.visibility = View.GONE
-                    binding.neutralSelectedBtn.visibility = View.GONE
-                    binding.sadSelectedBtn.visibility = View.GONE
-                    binding.happySelectedBtn.visibility = View.GONE
-                    binding.excitedSelectedBtn.visibility = View.GONE
-
-                    for (mood in moodTitles){
-                        when(mood) {
-                            "Frustrated" -> binding.frustratedSelectedBtn.visibility = View.VISIBLE
-                            "Neutral" -> binding.neutralSelectedBtn.visibility = View.VISIBLE
-                            "Sad" -> binding.sadSelectedBtn.visibility = View.VISIBLE
-                            "Happy" -> binding.happySelectedBtn.visibility = View.VISIBLE
-                            "Excited" -> binding.excitedSelectedBtn.visibility = View.VISIBLE
-                        }
-                    }
-                }
                 // Update UI dengan daftar jurnal yang terfilter
                 updateJournalListUI()
             }
