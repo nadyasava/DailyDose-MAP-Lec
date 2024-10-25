@@ -1,5 +1,5 @@
 # DailyDose
-DailyDose adalah aplikasi pencatatan harian yang dirancang untuk membantu pengguna mencatat pengalaman, mengatur kegiatan, dan merefleksikan kehidupan sehari-hari. Dengan antarmuka yang intuitif, aplikasi ini memudahkan pengguna dalam mengelola jurnal harian.
+DailyDose adalah aplikasi jurnal yang dirancang untuk memberikan pengalaman menulis keseharian yang lebih personal, ekspresif, dan menyenangkan dibandingkan aplikasi notes biasa. Dengan fitur-fitur unik seperti menambahkan gambar cover pada setiap entri jurnal, mengatur tag suasana hati, dan mencatat tanggal entri, pengguna dapat dengan mudah mengenang dan mencari pengalaman atau momen penting berdasarkan suasana hati atau tanggal tertentu. DailyDose memungkinkan pengguna untuk menyimpan kenangan dengan cara yang lebih hidup dan inspiratif, menjadikannya pilihan ideal untuk yang ingin mencatat dan mempersonalisasi pengalaman mereka sehari-hari.
 ## Fitur
 
 - **Navigasi yang Mudah**: Menggunakan Bottom Navigation untuk akses cepat ke berbagai fitur.
