@@ -61,12 +61,11 @@ class AddFragment : Fragment() {
             if (journalTitle.isBlank()) {
                 Toast.makeText(requireContext(), "Please enter a journal title", Toast.LENGTH_SHORT).show()
             } else {
-
-                val moodToSend = binding.moodButtonGroup.selectedButtons.first().text
-
-                if (moodToSend.isBlank()) {
-                    Toast.makeText(requireContext(), "Please enter your mood", Toast.LENGTH_SHORT).show()
+                val selectedButtons = binding.moodButtonGroup.selectedButtons
+                if (selectedButtons.isEmpty()) {
+                    Toast.makeText(requireContext(), "Please select your mood", Toast.LENGTH_SHORT).show()
                 } else {
+                    val moodToSend = selectedButtons.first().text
 
                     // Set selectedImageUrl to default image if no image is selected
                     val imageToSend = selectedImageUrl ?: DEFAULT_IMAGE
