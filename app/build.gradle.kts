@@ -69,12 +69,10 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.3")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.3")
     implementation(libs.firebase.storage.ktx)
+    implementation(libs.androidx.recyclerview)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(kotlin("script-runtime"))
-
-//    Button Mood
-    implementation("nl.bryanderidder:themed-toggle-button-group:1.4.1")
 }

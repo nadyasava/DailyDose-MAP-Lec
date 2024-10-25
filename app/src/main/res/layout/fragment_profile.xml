@@ -12,7 +12,7 @@
         android:background="@color/background">
 
         <TextView
-            android:id="@+id/sign_in_text"
+            android:id="@+id/profile_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -24,7 +24,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/sign_in_description"
+            android:id="@+id/profile_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="35dp"

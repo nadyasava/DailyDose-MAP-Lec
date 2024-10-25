@@ -1,59 +1,119 @@
 package com.example.dailydose
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.dailydose.adapter.JournalAdapter
+import com.example.dailydose.databinding.FragmentCalendarBinding
+import com.example.dailydose.model.Journal
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.Timestamp
+import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [CalendarFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CalendarFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var _binding: FragmentCalendarBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var journalAdapter: JournalAdapter
+    private val journalList = mutableListOf<Journal>()
+    private val filteredJournalList = mutableListOf<Journal>()
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_calendar, container, false)
+    ): View {
+        _binding = FragmentCalendarBinding.inflate(inflater, container, false)
+
+        firestore = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
+
+        journalAdapter = JournalAdapter(filteredJournalList, isHomeFragment = false)
+        binding.recyclerViewJournals.adapter = journalAdapter
+        binding.recyclerViewJournals.layoutManager = LinearLayoutManager(requireContext())
+
+        // Set up CalendarView
+        binding.calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
+            val selectedDate = Calendar.getInstance().apply {
+                set(year, month, dayOfMonth)
+            }
+            fetchJournalsForDate(selectedDate.time)
+        }
+
+        // Load today's journals by default
+        fetchJournalsForDate(Date())
+
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CalendarFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CalendarFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun fetchJournalsForDate(date: Date) {
+        val userId = auth.currentUser?.uid ?: return
+
+        // Set timestamp untuk awal dan akhir hari
+        val calendar = Calendar.getInstance().apply {
+            time = date
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        val startOfDay = calendar.time
+
+        calendar.apply {
+            set(Calendar.HOUR_OF_DAY, 23)
+            set(Calendar.MINUTE, 59)
+            set(Calendar.SECOND, 59)
+        }
+        val endOfDay = calendar.time
+
+        firestore.collection("journals")
+            .whereEqualTo("userId", userId)
+            .whereGreaterThanOrEqualTo("timestamp", startOfDay)
+            .whereLessThanOrEqualTo("timestamp", endOfDay)
+            .get()
+            .addOnSuccessListener { documents ->
+                journalList.clear()
+                for (document in documents) {
+                    val journalTitle = document.getString("journalTitle") ?: ""
+                    val journalText = document.getString("journalText") ?: ""
+                    val imageUrl = document.getString("imageUrl") ?: ""
+                    val mood = document.getString("mood") ?: ""
+                    val timestamp: Timestamp? = document.getTimestamp("timestamp")
+
+                    val journal = Journal(journalTitle, journalText, imageUrl, userId, mood, timestamp ?: Timestamp.now())
+                    journalList.add(journal)
                 }
+
+                updateJournalListUI()
             }
+            .addOnFailureListener { exception ->
+                Log.w("CalendarFragment", "Error getting documents: ", exception)
+                Toast.makeText(requireContext(), "Error fetching journals", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun updateJournalListUI() {
+        filteredJournalList.clear()
+        filteredJournalList.addAll(journalList)
+
+        if (filteredJournalList.isEmpty()) {
+            binding.noJournalText.visibility = View.VISIBLE
+        } else {
+            binding.noJournalText.visibility = View.GONE
+        }
+        journalAdapter.notifyDataSetChanged()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
