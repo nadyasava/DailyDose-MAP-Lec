@@ -1,5 +1,12 @@
 # DailyDose
 DailyDose adalah aplikasi jurnal yang dirancang untuk memberikan pengalaman menulis keseharian yang lebih personal, ekspresif, dan menyenangkan dibandingkan aplikasi notes biasa. Dengan fitur-fitur unik seperti menambahkan gambar cover pada setiap entri jurnal, mengatur tag suasana hati, dan mencatat tanggal entri, pengguna dapat dengan mudah mengenang dan mencari pengalaman atau momen penting berdasarkan suasana hati atau tanggal tertentu. DailyDose memungkinkan pengguna untuk menyimpan kenangan dengan cara yang lebih hidup dan inspiratif, menjadikannya pilihan ideal untuk yang ingin mencatat dan mempersonalisasi pengalaman mereka sehari-hari.
+
+## Anggota Kelompok
+1. Nadya Sava Maritza (00000082273)
+2. Arya Setiawan (00000083123)
+3. Raisya Putri Virnanda (00000081024)
+4. Sandya Pradayan Harijanto (00000082436)
+   
 ## Fitur
 
 - **Navigasi yang Mudah**: Menggunakan Bottom Navigation untuk akses cepat ke berbagai fitur.
