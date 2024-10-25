@@ -12,6 +12,7 @@
         android:id="@+id/addFragment"
         android:icon="@drawable/ic_add"
         android:title="Add Story" />
+
     <item
         android:id="@+id/journalsFragment"
         android:icon="@drawable/ic_journal"

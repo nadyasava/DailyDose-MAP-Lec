@@ -61,17 +61,26 @@ class AddFragment : Fragment() {
             if (journalTitle.isBlank()) {
                 Toast.makeText(requireContext(), "Please enter a journal title", Toast.LENGTH_SHORT).show()
             } else {
-                // Set selectedImageUrl to default image if no image is selected
-                val imageToSend = selectedImageUrl ?: DEFAULT_IMAGE
 
-                // Prepare to navigate to AddFragmentTwo
-                val bundle = Bundle().apply {
-                    putString("journalTitle", journalTitle)
-                    putString("selectedImageUrl", imageToSend)
+                val moodToSend = binding.moodButtonGroup.selectedButtons.first().text
+
+                if (moodToSend.isBlank()) {
+                    Toast.makeText(requireContext(), "Please enter your mood", Toast.LENGTH_SHORT).show()
+                } else {
+
+                    // Set selectedImageUrl to default image if no image is selected
+                    val imageToSend = selectedImageUrl ?: DEFAULT_IMAGE
+
+                    // Prepare to navigate to AddFragmentTwo
+                    val bundle = Bundle().apply {
+                        putString("journalTitle", journalTitle)
+                        putString("selectedImageUrl", imageToSend)
+                        putString("selectedMood", moodToSend)
+                    }
+
+                    // Navigate to AddFragmentTwo
+                    findNavController().navigate(R.id.action_addFragment_to_addFragmentTwo, bundle)
                 }
-
-                // Navigate to AddFragmentTwo
-                findNavController().navigate(R.id.action_addFragment_to_addFragmentTwo, bundle)
             }
         }
     }

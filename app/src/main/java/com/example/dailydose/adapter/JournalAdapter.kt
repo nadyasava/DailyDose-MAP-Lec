@@ -24,11 +24,13 @@ class JournalAdapter(
         private val journalTitle: TextView = itemView.findViewById(R.id.journalTitle)
         private val journalContent: TextView = itemView.findViewById(R.id.journalContent)
         private val journalTimestamp: TextView = itemView.findViewById(R.id.journalTimestamp)
+        private val journalMood: TextView = itemView.findViewById(R.id.journal_mood)
 
         fun bind(journal: Journal) {
             journalTitle.text = journal.journalTitle
             journalContent.text = journal.journalText
             journalTimestamp.text = formatTimestamp(journal.timestamp)
+            journalMood.text = journal.mood
 
             // Load image if exists
             journal.imageUrl?.let {
@@ -45,6 +47,7 @@ class JournalAdapter(
                     putString("content", journal.journalText)
                     putString("timestamp", formatTimestamp(journal.timestamp))
                     putString("title", journal.journalTitle)
+                    putString("mood", journal.mood)
                 }
                 itemView.findNavController().navigate(R.id.detailsFragment, bundle)
             }

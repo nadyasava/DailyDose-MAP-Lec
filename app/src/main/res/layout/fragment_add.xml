@@ -64,6 +64,84 @@
             android:textColor="@color/dark_gray"
             android:textSize="16sp" />
 
+        <nl.bryanderidder.themedtogglebuttongroup.ThemedToggleButtonGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mood_button_group"
+            android:layout_marginBottom="20dp"
+            app:toggle_selectAnimation="circular_reveal"
+            app:toggle_requiredAmount="1">
+
+            <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+                android:id="@+id/frustrated_btn"
+                android:layout_width="85dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="0dp"
+                app:toggle_textSize="12sp"
+                app:toggle_btnCornerRadius="7dp"
+                app:toggle_textColor="@color/mood_angry"
+                app:toggle_borderWidth="3dp"
+                app:toggle_borderColor="@color/mood_angry"
+                app:toggle_backgroundColor="@color/background"
+                app:toggle_selectedBackgroundColor="@color/mood_angry"
+                app:toggle_text="Frustrated"/>
+
+            <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+                android:id="@+id/neutral_btn"
+                android:layout_width="68dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="2dp"
+                app:toggle_textSize="12sp"
+                app:toggle_btnCornerRadius="7dp"
+                app:toggle_textColor="@color/mood_neutral"
+                app:toggle_borderWidth="3dp"
+                app:toggle_borderColor="@color/mood_neutral"
+                app:toggle_backgroundColor="@color/background"
+                app:toggle_selectedBackgroundColor="@color/mood_neutral"
+                app:toggle_text="Neutral"/>
+
+            <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+                android:id="@+id/sad_btn"
+                android:layout_width="48dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="3dp"
+                app:toggle_textSize="12sp"
+                app:toggle_btnCornerRadius="7dp"
+                app:toggle_textColor="@color/mood_sad"
+                app:toggle_borderWidth="3dp"
+                app:toggle_borderColor="@color/mood_sad"
+                app:toggle_backgroundColor="@color/background"
+                app:toggle_selectedBackgroundColor="@color/mood_sad"
+                app:toggle_text="Sad"/>
+
+            <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+                android:id="@+id/happy_btn"
+                android:layout_width="62dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="3dp"
+                app:toggle_textSize="12sp"
+                app:toggle_btnCornerRadius="7dp"
+                app:toggle_textColor="@color/mood_happy"
+                app:toggle_borderWidth="3dp"
+                app:toggle_borderColor="@color/mood_happy"
+                app:toggle_backgroundColor="@color/background"
+                app:toggle_selectedBackgroundColor="@color/mood_happy"
+                app:toggle_text="Happy"/>
+
+            <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+                android:id="@+id/excited_btn"
+                android:layout_width="66dp"
+                android:layout_height="25dp"
+                app:toggle_textSize="12sp"
+                app:toggle_btnCornerRadius="7dp"
+                app:toggle_textColor="@color/mood_excited"
+                app:toggle_borderWidth="3dp"
+                app:toggle_borderColor="@color/mood_excited"
+                app:toggle_backgroundColor="@color/background"
+                app:toggle_selectedBackgroundColor="@color/mood_excited"
+                app:toggle_text="Excited"/>
+        </nl.bryanderidder.themedtogglebuttongroup.ThemedToggleButtonGroup>
+
         <TextView
             android:id="@+id/coverphoto_text"
             android:layout_width="match_parent"

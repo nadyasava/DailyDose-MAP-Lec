@@ -7,7 +7,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dailydose.adapter.JournalAdapter
@@ -31,9 +36,15 @@ class JournalsFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
+
         _binding = FragmentJournalsBinding.inflate(inflater, container, false)
+
+        val drawerLayout: DrawerLayout = binding.drawerLayout
+        val filterButton: ImageButton = binding.buttonFilter
+        val backButton: Button = binding.backBtn
+        val clearFilterButton: Button = binding.clearFilterBtn
 
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
@@ -42,8 +53,34 @@ class JournalsFragment : Fragment() {
         binding.recyclerViewJournals.adapter = journalAdapter
         binding.recyclerViewJournals.layoutManager = LinearLayoutManager(requireContext())
 
+
         fetchJournals()
         setupSearchFunctionality()
+
+        filterButton.setOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.END)
+        }
+
+        backButton.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+        }
+
+        clearFilterButton.setOnClickListener {
+            filteredJournalList.clear()
+            filteredJournalList.addAll(journalList)
+
+            binding.frustratedSelectedBtn.visibility = View.GONE
+            binding.neutralSelectedBtn.visibility = View.GONE
+            binding.sadSelectedBtn.visibility = View.GONE
+            binding.happySelectedBtn.visibility = View.GONE
+            binding.excitedSelectedBtn.visibility = View.GONE
+
+            clearFilterButton.visibility = View.GONE
+
+            updateJournalListUI()
+        }
+
+        setupFilterByMood(drawerLayout)
 
         return binding.root
     }
@@ -63,9 +100,10 @@ class JournalsFragment : Fragment() {
                     val journalTitle = document.getString("journalTitle") ?: ""
                     val journalText = document.getString("journalText") ?: ""
                     val imageUrl = document.getString("imageUrl") ?: ""
+                    val mood = document.getString("mood")  ?: ""
                     val timestamp: Timestamp? = document.getTimestamp("timestamp")
 
-                    val journal = Journal(journalTitle, journalText, imageUrl, userId, timestamp ?: Timestamp.now())
+                    val journal = Journal(journalTitle, journalText, imageUrl, userId, mood,timestamp ?: Timestamp.now())
                     journalList.add(journal)
                 }
 
@@ -90,6 +128,27 @@ class JournalsFragment : Fragment() {
         journalAdapter.notifyDataSetChanged()
     }
 
+    private fun setupFilterByMood(drawerLayout: DrawerLayout) {
+        val selectedMoods = mutableListOf<String>()
+        val searchButton = binding.searchBtn
+
+        searchButton.setOnClickListener {
+            for (moodButton in binding.moodButtonGroup.selectedButtons) {
+                selectedMoods.add(moodButton.text)
+            }
+
+            if (selectedMoods.isNotEmpty()) {
+                filterJournalsByMood(selectedMoods)
+
+                selectedMoods.clear()
+                drawerLayout.closeDrawer(GravityCompat.END)
+            } else {
+                Toast.makeText(requireContext(), "Silahkan Pilih Mood", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
     private fun setupSearchFunctionality() {
         binding.searchBar.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -101,6 +160,64 @@ class JournalsFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {}
         })
     }
+
+    private fun filterJournalsByMood(selectedMoods: List<String>) {
+        // Jika tidak ada mood yang dipilih, tampilkan semua jurnal
+        if (selectedMoods.isEmpty()) {
+            filteredJournalList.clear()
+            filteredJournalList.addAll(journalList)
+            updateJournalListUI()
+            return
+        }
+
+        // Ambil userId dari user yang sedang login
+        val userId = auth.currentUser?.uid ?: return
+
+        // Buat query ke koleksi "moods" di Firestore berdasarkan moodTitle yang dipilih
+        firestore.collection("moods")
+            .whereEqualTo("userId", userId) // Filter hanya untuk user yang sedang login
+            .whereIn("moodTitle", selectedMoods) // Filter berdasarkan mood yang dipilih
+            .get()
+            .addOnSuccessListener { moodDocuments ->
+                val moodTitles = moodDocuments.mapNotNull { it.getString("moodTitle") }
+
+                // Filter jurnal berdasarkan journalId yang ditemukan
+                filteredJournalList.clear()
+                journalList.forEach { journal ->
+                    if (moodTitles.contains(journal.mood)) {
+                        filteredJournalList.add(journal)
+                    }
+                }
+
+                if (moodTitles.isNotEmpty()){
+
+                    binding.clearFilterBtn.visibility = View.VISIBLE
+
+                    binding.frustratedSelectedBtn.visibility = View.GONE
+                    binding.neutralSelectedBtn.visibility = View.GONE
+                    binding.sadSelectedBtn.visibility = View.GONE
+                    binding.happySelectedBtn.visibility = View.GONE
+                    binding.excitedSelectedBtn.visibility = View.GONE
+
+                    for (mood in moodTitles){
+                        when(mood) {
+                            "Frustrated" -> binding.frustratedSelectedBtn.visibility = View.VISIBLE
+                            "Neutral" -> binding.neutralSelectedBtn.visibility = View.VISIBLE
+                            "Sad" -> binding.sadSelectedBtn.visibility = View.VISIBLE
+                            "Happy" -> binding.happySelectedBtn.visibility = View.VISIBLE
+                            "Excited" -> binding.excitedSelectedBtn.visibility = View.VISIBLE
+                        }
+                    }
+                }
+                // Update UI dengan daftar jurnal yang terfilter
+                updateJournalListUI()
+            }
+            .addOnFailureListener { exception ->
+                Log.e("JournalsFragment", "Error fetching moods: ", exception)
+                Toast.makeText(requireContext(), "Error fetching mood filters", Toast.LENGTH_SHORT).show()
+            }
+    }
+
 
     private fun filterJournalsByTitle(query: String) {
         filteredJournalList.clear()

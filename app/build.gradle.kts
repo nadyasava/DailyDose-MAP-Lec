@@ -72,4 +72,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(kotlin("script-runtime"))
+
+//    Button Mood
+    implementation("nl.bryanderidder:themed-toggle-button-group:1.4.1")
 }

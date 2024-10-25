@@ -82,6 +82,7 @@ class MainActivity : AppCompatActivity() {
 
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController)
 
+
         binding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.homeFragment -> {
@@ -107,6 +108,7 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
     }
 
     private fun hideNavBar() {

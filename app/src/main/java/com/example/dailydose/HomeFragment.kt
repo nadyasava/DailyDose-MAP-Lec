@@ -117,9 +117,10 @@ class HomeFragment : Fragment() {
                     val journalTitle = document.getString("journalTitle") ?: ""
                     val journalText = document.getString("journalText") ?: ""
                     val imageUrl = document.getString("imageUrl") ?: ""
+                    val mood = document.getString("mood") ?: ""
                     val timestamp: Timestamp? = document.getTimestamp("timestamp")
 
-                    journalList.add(Journal(journalTitle, journalText, imageUrl, userId, timestamp ?: Timestamp.now()))
+                    journalList.add(Journal(journalTitle, journalText, imageUrl, userId, mood,timestamp ?: Timestamp.now()))
                 }
 
                 // Update the UI based on the journal list

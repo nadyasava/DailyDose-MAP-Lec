@@ -7,5 +7,6 @@ data class Journal(
     val journalText: String,
     val imageUrl: String?,
     val userId: String,
+    var mood: String? = null,
     val timestamp: Timestamp
 )
