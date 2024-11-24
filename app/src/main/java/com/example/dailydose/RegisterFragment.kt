@@ -35,60 +35,29 @@ class RegisterFragment : Fragment() {
         val toLogin = view.findViewById<TextView>(R.id.toLogin)
 
         registerButton.setOnClickListener {
-            val Fname = registerFname.text.toString().trim()
-            val Lname = registerLname.text.toString().trim()
+            val fname = registerFname.text.toString().trim()
+            val lname = registerLname.text.toString().trim()
             val email = registerEmail.text.toString().trim()
             val password = registerPassword.text.toString().trim()
 
-            // Validasi Nama
-            if (Fname.length > 15) {
-                Toast.makeText(requireContext(), "Name cannot be longer than 15 characters", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            if (Lname.length > 30) {
-                Toast.makeText(requireContext(), "Name cannot be longer than 30 characters", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            // Validasi Password (aturan password kuat)
-            if (!isPasswordStrong(password)) {
-                Toast.makeText(requireContext(), "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
-            }
-
-            // Jika semua field valid, lakukan registrasi
-            if (email.isNotEmpty() && password.isNotEmpty() && Fname.isNotEmpty() && Lname.isNotEmpty()) {
-                auth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val userId = auth.currentUser?.uid
-
-                            val user = hashMapOf(
-                                "userId" to userId,
-                                "Fname" to Fname,
-                                "Lname" to Lname,
-                                "email" to email,
-                                "profileImage" to "default_profile"
-                            )
-
-                            if (userId != null) {
-                                firestore.collection("users").document(userId)
-                                    .set(user)
-                                    .addOnSuccessListener {
-                                        Toast.makeText(requireContext(), "Registration Successful", Toast.LENGTH_SHORT).show()
-                                        findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
-                                    }
-                                    .addOnFailureListener { e ->
-                                        Toast.makeText(requireContext(), "Error saving user data: ${e.message}", Toast.LENGTH_SHORT).show()
-                                    }
-                            }
-                        } else {
-                            Toast.makeText(requireContext(), "Registration Failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-            } else {
-                Toast.makeText(requireContext(), "Please fill all the fields", Toast.LENGTH_SHORT).show()
+            when {
+                fname.isEmpty() || lname.isEmpty() || email.isEmpty() || password.isEmpty() -> {
+                    Toast.makeText(requireContext(), "Please fill all the fields", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                fname.length > 15 -> {
+                    Toast.makeText(requireContext(), "First name cannot be longer than 15 characters", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                lname.length > 30 -> {
+                    Toast.makeText(requireContext(), "Last name cannot be longer than 30 characters", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                !isPasswordStrong(password) -> {
+                    Toast.makeText(requireContext(), "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.", Toast.LENGTH_LONG).show()
+                    return@setOnClickListener
+                }
+                else -> registerUser(fname, lname, email, password)
             }
         }
 
@@ -99,7 +68,43 @@ class RegisterFragment : Fragment() {
         return view
     }
 
-    // Fungsi untuk validasi password yang kuat
+    private fun registerUser(fname: String, lname: String, email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnSuccessListener { authResult ->
+                val userId = authResult.user?.uid
+                if (userId != null) {
+                    saveUserToFirestore(userId, fname, lname, email)
+                } else {
+                    Toast.makeText(requireContext(), "Error: User ID is null", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(requireContext(), "Registration Failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun saveUserToFirestore(userId: String, fname: String, lname: String, email: String) {
+        val user = hashMapOf(
+            "userId" to userId,
+            "Fname" to fname,
+            "Lname" to lname,
+            "email" to email,
+            "profileImage" to "default_profile"
+        )
+
+        firestore.collection("users").document(userId)
+            .set(user)
+            .addOnSuccessListener {
+                Toast.makeText(requireContext(), "Registration Successful", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+            }
+            .addOnFailureListener { e ->
+                // If Firestore save fails, delete the Auth user
+                auth.currentUser?.delete()
+                Toast.makeText(requireContext(), "Error saving user data: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
     private fun isPasswordStrong(password: String): Boolean {
         val passwordPattern = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#\$%^&+=!])(?=\\S+\$).{8,}\$")
         return password.matches(passwordPattern)

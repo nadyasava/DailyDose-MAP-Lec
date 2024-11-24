@@ -162,7 +162,6 @@ class JournalsFragment : Fragment() {
     }
 
     private fun filterJournalsByMood(selectedMoods: List<String>) {
-        // Jika tidak ada mood yang dipilih, tampilkan semua jurnal
         if (selectedMoods.isEmpty()) {
             filteredJournalList.clear()
             filteredJournalList.addAll(journalList)
@@ -172,13 +171,14 @@ class JournalsFragment : Fragment() {
 
         binding.clearFilterBtn.visibility = View.VISIBLE
 
+        // Update mood button visibility
         binding.frustratedSelectedBtn.visibility = View.GONE
         binding.neutralSelectedBtn.visibility = View.GONE
         binding.sadSelectedBtn.visibility = View.GONE
         binding.happySelectedBtn.visibility = View.GONE
         binding.excitedSelectedBtn.visibility = View.GONE
 
-        for (mood in selectedMoods){
+        for (mood in selectedMoods) {
             when(mood) {
                 "Frustrated" -> binding.frustratedSelectedBtn.visibility = View.VISIBLE
                 "Neutral" -> binding.neutralSelectedBtn.visibility = View.VISIBLE
@@ -188,34 +188,14 @@ class JournalsFragment : Fragment() {
             }
         }
 
-        // Ambil userId dari user yang sedang login
-        val userId = auth.currentUser?.uid ?: return
+        // Filter journals directly based on mood
+        filteredJournalList.clear()
+        filteredJournalList.addAll(journalList.filter { journal ->
+            selectedMoods.contains(journal.mood)
+        })
 
-        // Buat query ke koleksi "moods" di Firestore berdasarkan moodTitle yang dipilih
-        firestore.collection("moods")
-            .whereEqualTo("userId", userId) // Filter hanya untuk user yang sedang login
-            .whereIn("moodTitle", selectedMoods) // Filter berdasarkan mood yang dipilih
-            .get()
-            .addOnSuccessListener { moodDocuments ->
-                val moodTitles = moodDocuments.mapNotNull { it.getString("moodTitle") }
-
-                // Filter jurnal berdasarkan journalId yang ditemukan
-                filteredJournalList.clear()
-                journalList.forEach { journal ->
-                    if (moodTitles.contains(journal.mood)) {
-                        filteredJournalList.add(journal)
-                    }
-                }
-
-                // Update UI dengan daftar jurnal yang terfilter
-                updateJournalListUI()
-            }
-            .addOnFailureListener { exception ->
-                Log.e("JournalsFragment", "Error fetching moods: ", exception)
-                Toast.makeText(requireContext(), "Error fetching mood filters", Toast.LENGTH_SHORT).show()
-            }
+        updateJournalListUI()
     }
-
 
     private fun filterJournalsByTitle(query: String) {
         filteredJournalList.clear()

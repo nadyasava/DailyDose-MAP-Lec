@@ -49,7 +49,6 @@ class EditProfileFragment : Fragment() {
     private val takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
             profileImage.setImageURI(imageUri)
-            uploadImageToFirebase()
         }
     }
 
@@ -60,7 +59,6 @@ class EditProfileFragment : Fragment() {
 
         editFname = view.findViewById(R.id.textFname)
         editLname = view.findViewById(R.id.textLname)
-        editEmail = view.findViewById(R.id.textEmail)
         buttonUpdate = view.findViewById(R.id.buttonEdit)
         buttonBack = view.findViewById(R.id.buttonBack)
         profileImage = view.findViewById(R.id.profileImage)
@@ -69,10 +67,8 @@ class EditProfileFragment : Fragment() {
         firestore = FirebaseFirestore.getInstance()
         storage = FirebaseStorage.getInstance()
 
-        // Load current user data
         loadUserData()
 
-        // Set click listener for profile image
         profileImage.setOnClickListener {
             showImageSourceDialog()
         }
@@ -92,10 +88,10 @@ class EditProfileFragment : Fragment() {
         val options = arrayOf("Camera", "Gallery")
         AlertDialog.Builder(requireContext())
             .setTitle("Select Image Source")
-            .setItems(options) { dialog: DialogInterface, which: Int ->
+            .setItems(options) { _, which ->
                 when (which) {
-                    0 -> requestCameraPermission() // Camera
-                    1 -> openGallery() // Gallery
+                    0 -> requestCameraPermission()
+                    1 -> openGallery()
                 }
             }
             .show()
@@ -125,28 +121,11 @@ class EditProfileFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val imageUri = data?.data
-            if (imageUri != null) {
-                this.imageUri = imageUri
+            data?.data?.let {
+                imageUri = it
                 profileImage.setImageURI(imageUri)
-                uploadImageToFirebase()
             }
         }
-    }
-
-    private fun uploadImageToFirebase() {
-        val userId = firebaseAuth.currentUser?.uid ?: return
-        val storageRef = storage.reference.child("profile_images/$userId.jpg")
-
-        storageRef.putFile(imageUri)
-            .addOnSuccessListener {
-                storageRef.downloadUrl.addOnSuccessListener { uri ->
-                    selectedImageUrl = uri.toString()
-                }
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(requireContext(), "Error uploading image: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
     }
 
     private fun loadUserData() {
@@ -158,16 +137,12 @@ class EditProfileFragment : Fragment() {
                     if (document != null && document.exists()) {
                         val fname = document.getString("Fname")
                         val lname = document.getString("Lname")
-                        val email = document.getString("email")
-                        selectedImageUrl = document.getString("profileImage") // Load existing image URL
+                        selectedImageUrl = document.getString("profileImage")
 
                         editFname.setText(fname)
                         editLname.setText(lname)
-                        editEmail.setText(email)
 
-                        // Load existing profile image
                         if (selectedImageUrl != null) {
-                            // Load image using Glide
                             Glide.with(this)
                                 .load(selectedImageUrl)
                                 .placeholder(R.drawable.default_profile)
@@ -177,38 +152,64 @@ class EditProfileFragment : Fragment() {
                         }
                     }
                 }
-                .addOnFailureListener { exception ->
-                    Toast.makeText(requireContext(), "Error loading user data: ${exception.message}", Toast.LENGTH_SHORT).show()
+                .addOnFailureListener {
+                    Toast.makeText(requireContext(), "Error loading user data", Toast.LENGTH_SHORT).show()
                 }
         }
+    }
+
+    private fun uploadImageAndSaveData(imageUri: Uri, onComplete: (String?) -> Unit) {
+        val storageRef = storage.reference.child("profile_images/${firebaseAuth.currentUser?.uid}.jpg")
+        storageRef.putFile(imageUri)
+            .addOnSuccessListener {
+                storageRef.downloadUrl.addOnSuccessListener { uri ->
+                    onComplete(uri.toString())
+                }.addOnFailureListener {
+                    onComplete(null)
+                }
+            }
+            .addOnFailureListener {
+                onComplete(null)
+            }
     }
 
     private fun updateUserData() {
         val userId = firebaseAuth.currentUser?.uid
         val fname = editFname.text.toString().trim()
         val lname = editLname.text.toString().trim()
-        val email = editEmail.text.toString().trim()
 
-        if (userId != null && fname.isNotEmpty() && lname.isNotEmpty() && email.isNotEmpty()) {
+        if (userId != null && fname.isNotEmpty() && lname.isNotEmpty()) {
             val updatedUser: MutableMap<String, Any> = hashMapOf(
                 "Fname" to fname,
-                "Lname" to lname,
-                "email" to email
+                "Lname" to lname
             )
-            // Include selected image URL if it exists
-            selectedImageUrl?.let { updatedUser["profileImage"] = it }
 
-            firestore.collection("users").document(userId)
-                .update(updatedUser)
-                .addOnSuccessListener {
-                    Toast.makeText(requireContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show()
-                    requireActivity().onBackPressed()
+            if (::imageUri.isInitialized) {
+                uploadImageAndSaveData(imageUri) { imageUrl ->
+                    if (imageUrl != null) {
+                        updatedUser["profileImage"] = imageUrl
+                        saveToFirestore(userId, updatedUser)
+                    } else {
+                        Toast.makeText(requireContext(), "Error uploading image", Toast.LENGTH_SHORT).show()
+                    }
                 }
-                .addOnFailureListener { e ->
-                    Toast.makeText(requireContext(), "Error updating profile: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
+            } else {
+                saveToFirestore(userId, updatedUser)
+            }
         } else {
             Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun saveToFirestore(userId: String, updatedUser: Map<String, Any>) {
+        firestore.collection("users").document(userId)
+            .update(updatedUser)
+            .addOnSuccessListener {
+                Toast.makeText(requireContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show()
+                requireActivity().onBackPressed()
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Error updating profile", Toast.LENGTH_SHORT).show()
+            }
     }
 }
