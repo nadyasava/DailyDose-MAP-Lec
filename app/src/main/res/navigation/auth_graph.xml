@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,9 +9,8 @@
         android:name="com.example.firebaseauth.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login">
-        <action
-            android:id="@+id/action_loginFragment_to_registerFragment"
-            app:destination="@id/registerFragment" />
+        <action android:id="@+id/action_loginFragment_to_registerFragment" app:destination="@id/registerFragment" />
+        <action android:id="@+id/action_loginFragment_to_resetPasswordFragment" app:destination="@id/resetPasswordFragment" />
     </fragment>
 
     <fragment
@@ -20,8 +18,36 @@
         android:name="com.example.firebaseauth.RegisterFragment"
         android:label="Register"
         tools:layout="@layout/fragment_register">
+        <action android:id="@+id/action_registerFragment_to_loginFragment" app:destination="@id/loginFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/resetPasswordFragment"
+        android:name="com.example.dailydose.ResetPasswordFragment"
+        android:label="Reset Password">
         <action
-            android:id="@+id/action_registerFragment_to_loginFragment"
+            android:id="@+id/action_resetPasswordFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_resetPasswordFragment_to_setNewPasswordFragment"
+            app:destination="@id/setNewPasswordFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.dailydose.ProfileFragment"
+        android:label="ProfileFragment">
+        <action
+            android:id="@+id/action_profileFragment_to_resetPasswordFragment"
+            app:destination="@id/resetPasswordFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/setNewPasswordFragment"
+        android:name="com.example.dailydose.SetNewPasswordFragment"
+        android:label="Set New Password">
+        <action
+            android:id="@+id/action_setNewPasswordFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
 </navigation>

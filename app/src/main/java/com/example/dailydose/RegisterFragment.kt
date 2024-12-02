@@ -43,19 +43,12 @@ class RegisterFragment : Fragment() {
             when {
                 fname.isEmpty() || lname.isEmpty() || email.isEmpty() || password.isEmpty() -> {
                     Toast.makeText(requireContext(), "Please fill all the fields", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
                 }
-                fname.length > 15 -> {
-                    Toast.makeText(requireContext(), "First name cannot be longer than 15 characters", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
-                lname.length > 30 -> {
-                    Toast.makeText(requireContext(), "Last name cannot be longer than 30 characters", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
+                !isEmailValid(email) -> {
+                    Toast.makeText(requireContext(), "Please enter a valid email address", Toast.LENGTH_SHORT).show()
                 }
                 !isPasswordStrong(password) -> {
                     Toast.makeText(requireContext(), "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.", Toast.LENGTH_LONG).show()
-                    return@setOnClickListener
                 }
                 else -> registerUser(fname, lname, email, password)
             }
@@ -73,6 +66,7 @@ class RegisterFragment : Fragment() {
             .addOnSuccessListener { authResult ->
                 val userId = authResult.user?.uid
                 if (userId != null) {
+                    sendVerificationEmail()
                     saveUserToFirestore(userId, fname, lname, email)
                 } else {
                     Toast.makeText(requireContext(), "Error: User ID is null", Toast.LENGTH_SHORT).show()
@@ -80,6 +74,18 @@ class RegisterFragment : Fragment() {
             }
             .addOnFailureListener { e ->
                 Toast.makeText(requireContext(), "Registration Failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun sendVerificationEmail() {
+        val user = auth.currentUser
+        user?.sendEmailVerification()
+            ?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(requireContext(), "Verification email sent. Please check your inbox.", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "Failed to send verification email: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
             }
     }
 
@@ -99,10 +105,14 @@ class RegisterFragment : Fragment() {
                 findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
             }
             .addOnFailureListener { e ->
-                // If Firestore save fails, delete the Auth user
-                auth.currentUser?.delete()
+                auth.currentUser?.delete() // Hapus pengguna jika penyimpanan gagal
                 Toast.makeText(requireContext(), "Error saving user data: ${e.message}", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun isEmailValid(email: String): Boolean {
+        val emailPattern = Regex("^[\\w-\\.]+@[\\w-]+\\.[a-z]{2,4}$")
+        return email.matches(emailPattern)
     }
 
     private fun isPasswordStrong(password: String): Boolean {

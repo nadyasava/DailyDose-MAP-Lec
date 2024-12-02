@@ -1,6 +1,7 @@
 package com.example.dailydose
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ class ProfileFragment : Fragment() {
     private lateinit var profileImage: ImageView
     private lateinit var buttonEdit: Button
     private lateinit var buttonLogout: Button
+    private lateinit var buttonResetPassword: Button
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
 
@@ -34,6 +36,7 @@ class ProfileFragment : Fragment() {
         profileImage = view.findViewById(R.id.profileImage)
         buttonEdit = view.findViewById(R.id.buttonEdit)
         buttonLogout = view.findViewById(R.id.buttonLogout)
+        buttonResetPassword = view.findViewById(R.id.buttonResetPassword) // Inisialisasi tombol
 
         firebaseAuth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
@@ -49,6 +52,16 @@ class ProfileFragment : Fragment() {
         buttonLogout.setOnClickListener {
             firebaseAuth.signOut()
             (activity as MainActivity).signOut()
+        }
+
+        // Listener untuk tombol reset password
+        buttonResetPassword.setOnClickListener {
+            Log.d("ProfileFragment", "Navigating to ResetPasswordFragment")
+            try {
+                findNavController().navigate(R.id.action_profileFragment_to_resetPasswordFragment)
+            } catch (e: Exception) {
+                Log.e("ProfileFragment", "Navigation error: ${e.message}")
+            }
         }
 
         return view
@@ -73,7 +86,6 @@ class ProfileFragment : Fragment() {
                         if (profileImageName == "default_profile") {
                             profileImage.setImageResource(R.drawable.default_profile)
                         } else {
-                            // Load image from Firebase if not default
                             Glide.with(this)
                                 .load(profileImageName)
                                 .placeholder(R.drawable.default_profile)
