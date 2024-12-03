@@ -93,5 +93,24 @@
         <argument
             android:name="content"
             app:argType="string" />
+        <action
+            android:id="@+id/action_detailsFragment_to_editJournalFragment"
+            app:destination="@id/editJournalFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editJournalFragment"
+        android:name="com.example.dailydose.EditJournalFragment"
+        android:label="editJournalFragment">
+        <action
+            android:id="@+id/action_editJournalFragment_to_editJournalFragmentTwo"
+            app:destination="@id/editJournalFragmentTwo" />
+    </fragment>
+    <fragment
+        android:id="@+id/editJournalFragmentTwo"
+        android:name="com.example.dailydose.EditJournalFragmentTwo"
+        android:label="EditJournalFragmentTwo" >
+        <action
+            android:id="@+id/action_editJournalFragmentTwo_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

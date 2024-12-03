@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.dailydose.databinding.FragmentAddTwoBinding
+import com.example.dailydose.databinding.FragmentEditJournalTwoBinding
 import com.example.dailydose.model.Journal
 import com.example.dailydose.model.Mood
 import com.example.dailydose.model.MoodType
@@ -15,21 +16,22 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.Timestamp
 
-class AddFragmentTwo : Fragment() {
-
-    private lateinit var binding: FragmentAddTwoBinding
+class EditJournalFragmentTwo : Fragment() {
+    private lateinit var binding: FragmentEditJournalTwoBinding
     private lateinit var firestore: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
     private var journalTitle: String? = null
     private var selectedImageUrl: String? = null
     private var selectedMood: String? = null
-    private var createdJournalId: String? = null
+    private var prev_content: String? = null
+    private var journalId: String? = null
+    private var content: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentAddTwoBinding.inflate(inflater, container, false)
+        binding = FragmentEditJournalTwoBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -44,10 +46,13 @@ class AddFragmentTwo : Fragment() {
         journalTitle = arguments?.getString("journalTitle")
         selectedImageUrl = arguments?.getString("selectedImageUrl") // Retrieve the selected image URL
         selectedMood = arguments?.getString("selectedMood")
+        prev_content = arguments?.getString("content")
+        journalId = arguments?.getString("id")
 
-        binding.buttonSubmit.setOnClickListener {
+        binding.editTextContent.setText(prev_content)
+
+        binding.buttonUpdate.setOnClickListener {
             submitJournal()
-
         }
 
         binding.buttonBack.setOnClickListener {
@@ -56,39 +61,38 @@ class AddFragmentTwo : Fragment() {
     }
 
     private fun submitJournal() {
-        val content = binding.editTextContent.text.toString()
+        content = binding.editTextContent.text.toString()
 
         // Validate input fields
-        if (journalTitle.isNullOrEmpty() || content.isEmpty()) {
+        if (journalTitle.isNullOrEmpty() || content!!.isEmpty()) {
             Toast.makeText(requireContext(), "Please fill out all fields", Toast.LENGTH_SHORT).show()
             return
         }
 
         // Create a Journal object
         val journal = Journal(
+            id = journalId,
             journalTitle = journalTitle!!,
-            journalText = content,
+            journalText = content!!,
             imageUrl = selectedImageUrl, // Set the selected image URL
             userId = auth.currentUser?.uid ?: "",
             mood = selectedMood,
             timestamp = Timestamp.now()
         )
 
-        // Save the journal to Firestore
-        firestore.collection("journals").add(journal)
-            .addOnSuccessListener {
-                createdJournalId = it.id
+        if(!journalId.isNullOrEmpty()){
+            firestore.collection("journals")
+                .document(journalId!!)
+                .set(journal)
+                .addOnSuccessListener {
 
-                firestore.collection("journals")
-                    .document(createdJournalId!!)
-                    .update("id", createdJournalId)
-                    .addOnSuccessListener {
-                        submitMood()
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(requireContext(), "Failed to save journal ID", Toast.LENGTH_SHORT).show()
-                    }
-            }
+                    submitMood()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(requireContext(), "Failed to update journal field", Toast.LENGTH_SHORT).show()
+                }
+        }
+
     }
 
     private fun submitMood() {
@@ -103,17 +107,14 @@ class AddFragmentTwo : Fragment() {
         }
 
         if (moodType != null) {
-            val mood = Mood(
-                moodTitle = moodType,
-                journalId = createdJournalId ?: "",
-                userId = auth.currentUser?.uid ?: "",
-            )
 
-            firestore.collection("moods").add(mood)
-                .addOnSuccessListener {
+            firestore.collection("moods").whereEqualTo("journalId", journalId)
+                .get()
+                .addOnSuccessListener { documents ->
 
-                    findNavController().navigate(R.id.action_addFragmentTwo_to_homeFragment)
-
+                    for (document in documents){
+                        updateMood(document.id, moodType)
+                    }
                 }
                 .addOnFailureListener {
                     Toast.makeText(requireContext(), "Failed to upload journal. Please try again.", Toast.LENGTH_SHORT).show()
@@ -123,5 +124,19 @@ class AddFragmentTwo : Fragment() {
             Toast.makeText(requireContext(), "Please select a valid mood", Toast.LENGTH_SHORT).show()
         }
 
+    }
+
+    private fun updateMood(moodId: String, mood: MoodType){
+        firestore.collection("moods")
+            .document(moodId)
+            .update("moodTitle", mood)
+            .addOnSuccessListener {
+                Toast.makeText(requireContext(), "Journal updated successfully", Toast.LENGTH_SHORT).show()
+
+                findNavController().navigate(R.id.homeFragment)
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Failed to update mood. Please try again.", Toast.LENGTH_SHORT).show()
+            }
     }
 }

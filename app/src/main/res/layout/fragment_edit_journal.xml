@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="35dp"
+        android:background="@color/background">
+
+        <TextView
+            android:id="@+id/sign_in_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="Journal Edit"
+            android:textAlignment="textStart"
+            android:textSize="24sp"
+            android:textColor="@color/dark_gray"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/sign_in_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:gravity="start"
+            android:textColor="@color/dark_gray"
+            android:text="Capture your thoughts, experiences, and special moments."
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/storytitle_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Title"
+            android:textStyle="bold"
+            android:textAlignment="textStart"
+            android:textColor="@color/dark_gray"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/editTextTitle"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/rounded_edittext"
+            android:padding="12dp"
+            android:layout_height="wrap_content"
+            android:hint="Enter your journal title"
+            android:gravity="top"
+            android:maxLength="30"/>
+
+        <TextView
+            android:id="@+id/journal_mood_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mood"
+            android:layout_marginBottom="10dp"
+            android:textStyle="bold"
+            android:textAlignment="textStart"
+            android:textColor="@color/dark_gray"
+            android:textSize="16sp" />
+
+        <nl.bryanderidder.themedtogglebuttongroup.ThemedToggleButtonGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mood_button_group"
+            android:layout_marginBottom="20dp"
+            app:toggle_selectAnimation="circular_reveal"
+            app:toggle_requiredAmount="1">
+
+            <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+                android:id="@+id/frustrated_btn"
+                android:layout_width="85dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="0dp"
+                app:toggle_textSize="12sp"
+                app:toggle_btnCornerRadius="7dp"
+                app:toggle_textColor="@color/mood_angry"
+                app:toggle_borderWidth="3dp"
+                app:toggle_borderColor="@color/mood_angry"
+                app:toggle_backgroundColor="@color/background"
+                app:toggle_selectedBackgroundColor="@color/mood_angry"
+                app:toggle_text="Frustrated"/>
+
+            <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+                android:id="@+id/neutral_btn"
+                android:layout_width="68dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="2dp"
+                app:toggle_textSize="12sp"
+                app:toggle_btnCornerRadius="7dp"
+                app:toggle_textColor="@color/mood_neutral"
+                app:toggle_borderWidth="3dp"
+                app:toggle_borderColor="@color/mood_neutral"
+                app:toggle_backgroundColor="@color/background"
+                app:toggle_selectedBackgroundColor="@color/mood_neutral"
+                app:toggle_text="Neutral"/>
+
+            <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+                android:id="@+id/sad_btn"
+                android:layout_width="48dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="3dp"
+                app:toggle_textSize="12sp"
+                app:toggle_btnCornerRadius="7dp"
+                app:toggle_textColor="@color/mood_sad"
+                app:toggle_borderWidth="3dp"
+                app:toggle_borderColor="@color/mood_sad"
+                app:toggle_backgroundColor="@color/background"
+                app:toggle_selectedBackgroundColor="@color/mood_sad"
+                app:toggle_text="Sad"/>
+
+            <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+                android:id="@+id/happy_btn"
+                android:layout_width="62dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="3dp"
+                app:toggle_textSize="12sp"
+                app:toggle_btnCornerRadius="7dp"
+                app:toggle_textColor="@color/mood_happy"
+                app:toggle_borderWidth="3dp"
+                app:toggle_borderColor="@color/mood_happy"
+                app:toggle_backgroundColor="@color/background"
+                app:toggle_selectedBackgroundColor="@color/mood_happy"
+                app:toggle_text="Happy"/>
+
+            <nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+                android:id="@+id/excited_btn"
+                android:layout_width="66dp"
+                android:layout_height="25dp"
+                app:toggle_textSize="12sp"
+                app:toggle_btnCornerRadius="7dp"
+                app:toggle_textColor="@color/mood_excited"
+                app:toggle_borderWidth="3dp"
+                app:toggle_borderColor="@color/mood_excited"
+                app:toggle_backgroundColor="@color/background"
+                app:toggle_selectedBackgroundColor="@color/mood_excited"
+                app:toggle_text="Excited"/>
+        </nl.bryanderidder.themedtogglebuttongroup.ThemedToggleButtonGroup>
+
+        <TextView
+            android:id="@+id/coverphoto_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Cover Photo"
+            android:textStyle="bold"
+            android:textAlignment="textStart"
+            android:textColor="@color/dark_gray"
+            android:textSize="16sp" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:layout_marginBottom="10dp">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/uploadimageview"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:scaleType="centerCrop"
+                android:background="@drawable/rounded_border"
+                android:clickable="true"
+                android:focusable="true"
+                app:shapeAppearanceOverlay="@style/CustomImageViewRoundedCorners" />
+
+            <View
+                android:id="@+id/viewOverlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/black"
+                android:alpha="0.3"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/iconPhoto"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_photo"
+                    android:contentDescription="Photo Icon"
+                    android:layout_gravity="center"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select File"
+                    android:textAlignment="center"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/accent"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="@color/placeholder_text" />
+
+            <TextView
+                android:id="@+id/or_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:text="Or"
+                android:textAlignment="center"
+                android:textColor="@color/placeholder_text"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="@color/placeholder_text" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginBottom="20dp">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/cameraimageview"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:scaleType="centerCrop"
+                android:background="@color/element_background"
+                android:clickable="true"
+                android:focusable="true"
+                app:shapeAppearanceOverlay="@style/CustomImageViewRoundedCorners" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/iconCamera"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_camera"
+                    android:contentDescription="Photo Icon"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="10dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Open Camera &amp; Take Photo"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:textColor="@color/accent"
+                    android:textStyle="bold"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/buttonNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Next"
+            android:textColor="@color/dark_gray"
+            android:layout_gravity="center"
+            android:textSize="15sp"
+            android:background="@drawable/rounded_button"
+            android:textAllCaps="false"/>
+
+    </LinearLayout>
+</layout>

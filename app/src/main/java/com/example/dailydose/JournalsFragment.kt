@@ -97,13 +97,14 @@ class JournalsFragment : Fragment() {
 
                 journalList.clear()
                 for (document in documents) {
+                    val journalId = document.id
                     val journalTitle = document.getString("journalTitle") ?: ""
                     val journalText = document.getString("journalText") ?: ""
                     val imageUrl = document.getString("imageUrl") ?: ""
                     val mood = document.getString("mood")  ?: ""
                     val timestamp: Timestamp? = document.getTimestamp("timestamp")
 
-                    val journal = Journal(journalTitle, journalText, imageUrl, userId, mood,timestamp ?: Timestamp.now())
+                    val journal = Journal(journalId, journalTitle, journalText, imageUrl, userId, mood,timestamp ?: Timestamp.now())
                     journalList.add(journal)
                 }
 
