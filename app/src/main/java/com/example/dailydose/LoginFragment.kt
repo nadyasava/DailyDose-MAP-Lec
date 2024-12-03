@@ -42,7 +42,7 @@ class LoginFragment : Fragment() {
 
         // Configure Google Sign-In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("966560822785-etjgfhe3lh1kee77bl3tlfnnu02m8pu0.apps.googleusercontent.com") // Replace with your web client ID
+            .requestIdToken("966560822785-etjgfhe3lh1kee77bl3tlfnnu02m8pu0.apps.googleusercontent.com")
             .requestEmail()
             .build()
 
@@ -53,6 +53,7 @@ class LoginFragment : Fragment() {
         val loginButton = view.findViewById<Button>(R.id.loginButton)
         val toRegister = view.findViewById<TextView>(R.id.toRegister)
         val googleSignInButton = view.findViewById<Button>(R.id.googleSignInButton)
+        val forgotPassword = view.findViewById<TextView>(R.id.forgotPassword)
 
         loginButton.setOnClickListener {
             val email = loginEmail.text.toString().trim()
@@ -65,12 +66,16 @@ class LoginFragment : Fragment() {
                             saveLoginStatus(true)
                             auth.currentUser?.uid?.let { fetchUserData(it) }
                         } else {
-                            Toast.makeText(requireContext(), "Login Failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                            showToast("Login Failed: ${task.exception?.message}")
                         }
                     }
             } else {
-                Toast.makeText(requireContext(), "Please enter email and password", Toast.LENGTH_SHORT).show()
+                showToast("Please enter email and password")
             }
+        }
+
+        forgotPassword.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_resetPasswordFragment)
         }
 
         googleSignInButton.setOnClickListener {
@@ -89,26 +94,22 @@ class LoginFragment : Fragment() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
             try {
                 val account = task.getResult(ApiException::class.java)
-                // Proceed with authentication
                 val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                 auth.signInWithCredential(credential)
                     .addOnCompleteListener { authTask ->
                         if (authTask.isSuccessful) {
-                            // Fetch user data or navigate
                             auth.currentUser?.uid?.let { fetchUserData(it) }
                         } else {
-                            Toast.makeText(requireContext(), "Authentication Failed: ${authTask.exception?.message}", Toast.LENGTH_SHORT).show()
+                            showToast("Authentication Failed: ${authTask.exception?.message}")
                         }
                     }
             } catch (e: ApiException) {
                 if (e.statusCode == GoogleSignInStatusCodes.CANCELED) {
-                    Toast.makeText(requireContext(), "Sign-In was canceled by the user", Toast.LENGTH_SHORT).show()
+                    showToast("Sign-In was canceled by the user")
                 } else {
-                    Toast.makeText(requireContext(), "Sign-In Failed: ${e.statusCode}", Toast.LENGTH_SHORT).show()
+                    showToast("Sign-In Failed: ${e.statusCode}")
                 }
             }
-
-
         }
 
     private fun startGoogleSignIn() {
@@ -123,28 +124,29 @@ class LoginFragment : Fragment() {
                 if (document != null) {
                     val name = document.getString("name")
                     sharedPreferences.edit().putString("userName", name).apply()
-
-                    // Update login status
                     (activity as MainActivity).loginUser()
 
-                    // Switch to the main navigation graph
                     val navHostFragment = requireActivity().supportFragmentManager
                         .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
                     val navController = navHostFragment.navController
                     navController.setGraph(R.navigation.nav_graph)
-
-                    // Navigate to the home fragment after switching graph
                     navController.navigate(R.id.homeFragment)
                 } else {
-                    Toast.makeText(requireContext(), "No such user", Toast.LENGTH_SHORT).show()
+                    showToast("No such user")
                 }
             }
             .addOnFailureListener { e ->
-                Toast.makeText(requireContext(), "Error fetching user data: ${e.message}", Toast.LENGTH_SHORT).show()
+                showToast("Error fetching user data: ${e.message}")
             }
     }
 
     private fun saveLoginStatus(isLoggedIn: Boolean) {
         sharedPreferences.edit().putBoolean("isLoggedIn", isLoggedIn).apply()
+    }
+
+    private fun showToast(message: String) {
+        if (isAdded) {
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        }
     }
 }
