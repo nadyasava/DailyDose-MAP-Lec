@@ -43,6 +43,7 @@ class JournalAdapter(
             // Set click listener for the entire card view
             itemView.setOnClickListener {
                 val bundle = Bundle().apply {
+                    putString("id", journal.id)
                     putString("imageUrl", journal.imageUrl)
                     putString("content", journal.journalText)
                     putString("timestamp", formatTimestamp(journal.timestamp))

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="35dp"
+        android:background="@color/background">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center_vertical">
+
+            <ImageButton
+                android:id="@+id/buttonBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_back"
+                android:background="?attr/selectableItemBackground"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/sign_in_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Journal Edit"
+                android:textAlignment="textStart"
+                android:textSize="24sp"
+                android:textColor="@color/dark_gray"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/sign_in_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:gravity="start"
+            android:textColor="@color/dark_gray"
+            android:text="Capture your thoughts, experiences, and special moments."
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/storycontent_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Journal Content"
+            android:textStyle="bold"
+            android:textAlignment="textStart"
+            android:textColor="@color/dark_gray"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/editTextContent"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+
+            android:background="@drawable/rounded_edittext"
+            android:padding="12dp"
+            android:layout_height="400dp"
+            android:hint="Tell your story"
+            android:gravity="top" />
+
+        <Button
+            android:id="@+id/buttonUpdate"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Update Journal"
+            android:textColor="@color/dark_gray"
+            android:textSize="15sp"
+            android:background="@drawable/rounded_button"
+            android:textAllCaps="false"/>
+    </LinearLayout>
+</layout>

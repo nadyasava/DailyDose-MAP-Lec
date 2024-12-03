@@ -2,7 +2,7 @@ package com.example.dailydose.model
 
 
 data class Mood (
-    val moodTitle: MoodType,
+    var moodTitle: MoodType,
     val journalId: String,
     val userId: String,
 )
