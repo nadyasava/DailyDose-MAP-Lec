@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.dailydose.MainActivity
 import com.example.dailydose.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes
@@ -98,7 +99,9 @@ class LoginFragment : Fragment() {
                 auth.signInWithCredential(credential)
                     .addOnCompleteListener { authTask ->
                         if (authTask.isSuccessful) {
-                            auth.currentUser?.uid?.let { fetchUserData(it) }
+                            auth.currentUser?.uid?.let { userId ->
+                                handleGoogleSignInSuccess(userId, account)
+                            }
                         } else {
                             showToast("Authentication Failed: ${authTask.exception?.message}")
                         }
@@ -111,6 +114,36 @@ class LoginFragment : Fragment() {
                 }
             }
         }
+
+    private fun handleGoogleSignInSuccess(userId: String, account: GoogleSignInAccount) {
+        // Buat map data user dari akun Google
+        val userData = hashMapOf(
+            "email" to account.email,
+            "Fname" to (account.givenName ?: ""),
+            "Lname" to (account.familyName ?: ""),
+            "profileImage" to (account.photoUrl?.toString() ?: "default_profile")
+        )
+
+        // Simpan data ke Firestore
+        firestore.collection("users").document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (!document.exists()) {
+                    // Jika dokumen belum ada, buat baru
+                    firestore.collection("users").document(userId)
+                        .set(userData)
+                        .addOnSuccessListener {
+                            fetchUserData(userId)
+                        }
+                        .addOnFailureListener { e ->
+                            showToast("Error saving user data: ${e.message}")
+                        }
+                } else {
+                    // Jika dokumen sudah ada, langsung fetch data
+                    fetchUserData(userId)
+                }
+            }
+    }
 
     private fun startGoogleSignIn() {
         val signInIntent = googleSignInClient.signInIntent
