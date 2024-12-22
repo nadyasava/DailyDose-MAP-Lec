@@ -2,6 +2,7 @@ package com.example.firebaseauth
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,17 +38,18 @@ class LoginFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_login, container, false)
 
+        // Inisialisasi Firebase dan SharedPreferences
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
         sharedPreferences = requireActivity().getSharedPreferences("UStoryPrefs", 0)
 
         // Configure Google Sign-In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("966560822785-etjgfhe3lh1kee77bl3tlfnnu02m8pu0.apps.googleusercontent.com")
+            .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
 
-        googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
+        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
 
         val loginEmail = view.findViewById<EditText>(R.id.loginEmail)
         val loginPassword = view.findViewById<EditText>(R.id.loginPassword)
@@ -147,6 +149,7 @@ class LoginFragment : Fragment() {
 
     private fun startGoogleSignIn() {
         val signInIntent = googleSignInClient.signInIntent
+        Log.d("LoginFragment", "Launching Google Sign-In Intent")
         googleSignInLauncher.launch(signInIntent)
     }
 
