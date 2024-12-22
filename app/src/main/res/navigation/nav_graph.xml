@@ -75,15 +75,20 @@
             android:id="@+id/action_profileFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
         <action
-            android:id="@+id/action_profileFragment_to_resetPasswordFragment"
-            app:destination="@id/resetPasswordFragment" />
+            android:id="@+id/action_profileFragment_to_setNewPasswordFragment"
+            app:destination="@id/setNewPasswordFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/resetPasswordFragment"
-        android:name="com.example.dailydose.ResetPasswordFragment"
-        android:label="Reset Password"
-        tools:layout="@layout/fragment_reset_password" />
+        android:id="@+id/setNewPasswordFragment"
+        android:name="com.example.dailydose.SetNewPasswordFragment"
+        android:label="Set New Password"
+        tools:layout="@layout/fragment_set_new_password">
+        <action
+            android:id="@+id/action_set_new_password_fragment_to_profile_fragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+
 
     <fragment
         android:id="@+id/editProfileFragment"

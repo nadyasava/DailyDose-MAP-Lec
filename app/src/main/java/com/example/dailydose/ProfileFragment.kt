@@ -58,7 +58,7 @@ class ProfileFragment : Fragment() {
         buttonResetPassword.setOnClickListener {
             Log.d("ProfileFragment", "Navigating to ResetPasswordFragment")
             try {
-                findNavController().navigate(R.id.action_profileFragment_to_resetPasswordFragment)
+                findNavController().navigate(R.id.action_profileFragment_to_setNewPasswordFragment)
             } catch (e: Exception) {
                 Log.e("ProfileFragment", "Navigation error: ${e.message}")
             }
