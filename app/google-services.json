@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "966560822785",
+    "project_id": "dailydose-lec",
+    "storage_bucket": "dailydose-lec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:966560822785:android:c17c5f747b0883bc1e3200",
+        "android_client_info": {
+          "package_name": "com.example.dailydose"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "966560822785-ncejdf4hmr5u25aac2rhaj2h6vf4kftk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dailydose",
+            "certificate_hash": "00eae04393adc2dcd1f0b6f5dddd30ead037486b"
+          }
+        },
+        {
+          "client_id": "966560822785-tbr0jhnerhumvgjea525f8spl32rrqg4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dailydose",
+            "certificate_hash": "840ad19921706529ca7d58ee712370bd1773734f"
+          }
+        },
+        {
+          "client_id": "966560822785-etjgfhe3lh1kee77bl3tlfnnu02m8pu0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByHat_1djikmvU17nnCB6XSY3LxJA5Jrg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "966560822785-etjgfhe3lh1kee77bl3tlfnnu02m8pu0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
